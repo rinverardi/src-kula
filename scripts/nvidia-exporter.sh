@@ -35,7 +35,7 @@ echo "Kula NVIDIA Exporter started. Writing to $STORAGE_DIR/nvidia.log every ${I
 while true; do
     # Query format: pci.bus_id, temperature.gpu, utilization.gpu, memory.used, memory.total, power.draw
     # We use a tmp file and atomic mv to prevent Kula from reading partial data.
-    nvidia-smi --query-gpu=pci.bus_id,temperature.gpu,utilization.gpu,memory.used,memory.total,power.draw --format=csv,noheader,nounits > "$STORAGE_DIR/nvidia.log.tmp" 2>/dev/null
+    nvidia-smi --query-gpu=pci.bus_id,temperature.gpu,utilization.gpu,memory.used,memory.total,power.draw --format=csv,noheader,nounits | sed s/^0000// > "$STORAGE_DIR/nvidia.log.tmp" 2>/dev/null
     
     if [ $? -eq 0 ]; then
         mv "$STORAGE_DIR/nvidia.log.tmp" "$STORAGE_DIR/nvidia.log"
